@@ -1,0 +1,85 @@
+
+CPU: AMD 4800U
+OS: Windows 11 23H2
+Unit: us/op
+Time100: Average runtime for one function call when iter==100 (same for 1K and 10K)
+Warm up run: 4
+Benchmark run: 2
+===============================================================================
+OpenJDK-21 by Microsoft
+
+Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
+Concat.concat               avgt    2      4.275     427.792     37823.217
+Concat.format               avgt    2     22.982    1773.458    142374.125
+Concat.join                 avgt    2      5.053     439.490     37915.178
+Concat.plus                 avgt    2      4.295     451.530     37612.396
+Concat.streamAPI            avgt    2     20.864    1760.311    142876.638
+
+Concat.stringBuffer         avgt    2      1.031      10.108        97.994
+Concat.stringBuilder        avgt    2      1.023      10.623        97.774
+Concat.stringJoiner         avgt    2      1.083      10.255       106.251
+
+Concat.formatBatch          avgt    2      3.659      39.919       403.533
+Concat.joinBatch            avgt    2      0.797       7.826       100.166
+Concat.streamAPIBatch       avgt    2      1.072      11.670       110.601
+
+Concat.formatManual         avgt    2      4.470      43.972       428.061
+Concat.stringBuilderDumb    avgt    2      8.543     854.379     77236.251
+
+rawArrayCopy                avgt    2      0.540       6.400        57.917
+
+===============================================================================
+OpenJDK-23 by Oracle
+
+Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
+Concat.concat               avgt    2      3.506     399.208     37074.481
+Concat.format               avgt    2     16.990    1644.219    146112.138
+Concat.join                 avgt    2      3.822     386.046     41787.001
+Concat.plus                 avgt    2      3.476     397.323     41300.799
+Concat.streamAPI            avgt    2     15.074    1496.245    149636.151
+
+Concat.stringBuffer         avgt    2      0.177      12.796       134.070
+Concat.stringBuilder        avgt    2      0.179       4.972        63.735
+Concat.stringJoiner         avgt    2      0.730       6.931        82.449
+
+Concat.formatBatch          avgt    2      1.720      18.189       189.283
+Concat.joinBatch            avgt    2      0.629       6.799        75.173
+Concat.streamAPIBatch       avgt    2      0.808       8.003        77.450
+
+Concat.formatManual         avgt    2      1.700      16.707       196.750
+Concat.stringBuilderDumb    avgt    2      8.660     854.575     84481.132
+
+rawArrayCopy                avgt    2      0.326       2.874        27.091
+rawLoop                     avgt    2      0.352       3.607        40.246
+
+===============================================================================
+OpenJDK-23 CE
+
+Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
+Concat.concat               avgt    2      4.405     442.932     39190.137
+Concat.format               avgt    2     21.993    1735.098    157507.172
+Concat.join                 avgt    2      4.337     449.146     39307.840
+Concat.plus                 avgt    2      4.365     444.053     37990.978
+Concat.streamAPI            avgt    2     21.230    1722.189    154472.261
+
+Concat.stringBuffer         avgt    2      1.485      15.868       129.287
+Concat.stringBuilder        avgt    2      0.679       7.108        69.284
+Concat.stringJoiner         avgt    2      1.723      12.954        93.244
+
+Concat.formatBatch          avgt    2      3.165      24.677       267.905
+Concat.joinBatch            avgt    2      1.204      12.456        94.193
+Concat.streamAPIBatch       avgt    2     21.230      13.242       133.750
+
+Concat.formatManual         avgt    2      2.476      23.112       235.712
+Concat.stringBuilderDumb    avgt    2      8.538     894.407     78913.689
+
+rawArrayCopy                avgt    2      0.496       5.333        51.176
+rawLoop                     avgt    2      0.404       2.596        34.772
+
+Note:
+1. Within each build, latency-size curve is as expected: O(N) and O(N^2)
+2. rawArrayCopy is slower than rawLoop, which is strange
+3. formatBatch, streamAPIBatch, formatManual are consistently slower on CE than Oracle build
+    -- Possibly due to close-source opt passes
+4. stringBuffer is consistently slower on CE than Microsoft build
+
