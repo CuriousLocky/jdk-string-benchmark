@@ -6,7 +6,7 @@ Time100: Average runtime for one function call when iter==100 (same for 1K and 1
 Warm up run: 4
 Benchmark run: 2
 ===============================================================================
-OpenJDK-21 by Microsoft
+OpenJDK-21.0.4 by Microsoft
 
 Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
 Concat.concat               avgt    2      4.275     427.792     37823.217
@@ -29,7 +29,7 @@ Concat.stringBuilderDumb    avgt    2      8.543     854.379     77236.251
 rawArrayCopy                avgt    2      0.540       6.400        57.917
 
 ===============================================================================
-OpenJDK-23 by Oracle
+OpenJDK-23+37.1 by Oracle
 
 Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
 Concat.concat               avgt    2      3.506     399.208     37074.481
@@ -53,7 +53,7 @@ rawArrayCopy                avgt    2      0.326       2.874        27.091
 rawLoop                     avgt    2      0.352       3.607        40.246
 
 ===============================================================================
-OpenJDK-23 CE
+OpenJDK-23+37.1 CE
 
 Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
 Concat.concat               avgt    2      4.405     442.932     39190.137
