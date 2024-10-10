@@ -43,50 +43,56 @@ public class Concat {
     }
 
     @Benchmark
-    public String plus(ConcatBenchmarkState state) {
+    public String plus(ConcatBenchmarkState state, Blackhole bh) {
         String str = state.str1;
         for (int i = 0; i < state.iter; i++) {
             str += state.str2;
         }
+        bh.consume(str);
         return str;
     }
 
     @Benchmark
-    public String concat(ConcatBenchmarkState state) {
+    public String concat(ConcatBenchmarkState state, Blackhole bh) {
         String str = state.str1;
         for(int i = 0; i < state.iter; i++) {
             str = str.concat(state.str2);
         }
+        bh.consume(str);
         return str;
     }
 
     @Benchmark
-    public String join(ConcatBenchmarkState state) {
+    public String join(ConcatBenchmarkState state, Blackhole bh) {
         String str = state.str1;
         for(int i = 0; i < state.iter; i++) {
             str = String.join("", str, state.str2);
         }
+        bh.consume(str);
         return str;
     }
 
 
     @Benchmark
-    public String joinBatch(ConcatBenchmarkState state) {
+    public String joinBatch(ConcatBenchmarkState state, Blackhole bh) {
         String[] str1str2Arr = arrayFill(state);
-        return String.join("", str1str2Arr);
+        String str = String.join("", str1str2Arr);
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String format(ConcatBenchmarkState state) {
+    public String format(ConcatBenchmarkState state, Blackhole bh) {
         String str = state.str1;
         for(int i = 0; i < state.iter; i++) {
             str = String.format("%s%s", str, state.str2);
         }
+        bh.consume(str);
         return str;
     }
 
     @Benchmark
-    public String formatManual(ConcatBenchmarkState state) {
+    public String formatManual(ConcatBenchmarkState state, Blackhole bh) {
         String str = state.str1;
         Formatter formatter = new Formatter();
         formatter.format("%s", str);
@@ -95,76 +101,89 @@ public class Concat {
         }
 
         String result = formatter.toString();
-        assert result.equals(state.result);
+        bh.consume(result);
         return result;
     }
 
     @Benchmark
-    public String formatBatch(ConcatBenchmarkState state) {
+    public String formatBatch(ConcatBenchmarkState state, Blackhole bh) {
         String[] str1str2Arr = arrayFill(state);
-        return String.format(state.formatStr, (Object[]) str1str2Arr);
+        String str = String.format(state.formatStr, (Object[]) str1str2Arr);
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String streamAPI(ConcatBenchmarkState state) {
+    public String streamAPI(ConcatBenchmarkState state, Blackhole bh) {
         String str = state.str1;
         for (int i = 0; i < state.iter; i++) {
             List<String> stringList = List.of(str, state.str2);
             str = stringList.stream().collect(Collectors.joining());
         }
+        bh.consume(str);
         return str;
     }
 
     @Benchmark
-    public String streamAPIBatch(ConcatBenchmarkState state) {
+    public String streamAPIBatch(ConcatBenchmarkState state, Blackhole bh) {
         String[] str1str2Arr = arrayFill(state);
         List<String> list = Arrays.asList(str1str2Arr);
-        return list.stream().collect(Collectors.joining());
+        String str = list.stream().collect(Collectors.joining());
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String stringBuffer(ConcatBenchmarkState state) {
+    public String stringBuffer(ConcatBenchmarkState state, Blackhole bh) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("String");
         for(int i = 0; i < state.iter; i++) {
             buffer.append(state.str2);
         }
-        return buffer.toString();
+        String str = buffer.toString();
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String stringBuilder(ConcatBenchmarkState state) {
+    public String stringBuilder(ConcatBenchmarkState state, Blackhole bh) {
         StringBuilder builder = new StringBuilder();
         builder.append(state.str1);
         for(int i = 0; i < state.iter; i++) {
             builder.append(state.str2);
         }
-        return builder.toString();
+        String str = builder.toString();
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String stringBuilderDum(ConcatBenchmarkState state) {
+    public String stringBuilderDum(ConcatBenchmarkState state, Blackhole bh) {
         StringBuilder builder = new StringBuilder(state.str1);
         for(int i = 0; i < state.iter; i++) {
             builder.append(state.str2);
             String currnet = builder.toString();
             builder = new StringBuilder(currnet);
         }
-        return builder.toString();
+        String str = builder.toString();
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String stringJoiner(ConcatBenchmarkState state) {
+    public String stringJoiner(ConcatBenchmarkState state, Blackhole bh) {
         StringJoiner joiner = new StringJoiner("");
         joiner.add("String");
         for(int i = 0; i < state.iter; i++) {
             joiner.add(state.str2);
         }
-        return joiner.toString();
+        String str = joiner.toString();
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String rawArrayCopy(ConcatBenchmarkState state) {
+    public String rawArrayCopy(ConcatBenchmarkState state, Blackhole bh) {
         int size1 = state.str1.length();
         int size2 = state.str2.length();
         int size = size1 + size2 * state.iter;
@@ -174,11 +193,13 @@ public class Concat {
         for(int i = 0; i < state.iter; i++) {
             System.arraycopy(str2chars, 0, chars, size1 + i * size2, size2);
         }
-        return String.valueOf(chars);
+        String str = String.valueOf(chars);
+        bh.consume(str);
+        return str;
     }
 
     @Benchmark
-    public String rawLoop(ConcatBenchmarkState state) {
+    public String rawLoop(ConcatBenchmarkState state, Blackhole bh) {
         int size1 = state.str1.length();
         int size2 = state.str2.length();
         char[] chars = new char[size1 + size2 * state.iter];
@@ -193,6 +214,8 @@ public class Concat {
                 chars[index++] = str2chars[j];
             }
         }
-        return String.valueOf(chars);
+        String str = String.valueOf(chars);
+        bh.consume(str);
+        return str;
     }
 }
