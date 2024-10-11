@@ -1,0 +1,34 @@
+CPU: AMD 4800U
+OS: Windows 11 23H2
+Unit: us/op
+Warm up run: 4
+Benchmark run: 2
+===============================================================================
+OpenJDK-23+37.1 by Oracle
+
+Compare Benchmark            Mode  Cnt     Time1K     Time10K     Time100K
+Compare.startsWith           avgt    2     48.734      90.622      326.806
+Compare.endsWith             avgt    2     78.165     136.453      537.929
+Compare.sort                 avgt    2     96.518     131.157      664.942
+Compare.compareTo            avgt    2     85.957     126.060      412.721
+Compare.indexOf              avgt    2   1878.596   11973.483   107828.230
+
+================================================================================
+OpenJDK-23+37.1 by Oracle
+
+Compare Benchmark            Mode  Cnt     Time1K     Time10K     Time100K
+Compare.startsWith           avgt    2     52.299      82.560      364.158
+Compare.endsWith             avgt    2     66.552     134.852      617.137
+Compare.sort                 avgt    2    133.304     182.102      723.987
+Compare.compareTo            avgt    2     65.294     106.953      424.290
+Compare.indexOf              avgt    2   1935.402   12342.623   120526.992
+
+Note:
+1. startsWith and endsWith have almost 100% speed difference
+    Possibly due to cache alignment?
+2. sort uses tim sort algorithm, and it is indeed fast
+3. indexOf is particularly slow, maybe something can be done about it
+4. startsWith, endsWith, compareTo runtime **grows** with string size, having similar trends
+    Possibly due to cache or paging?
+
+
