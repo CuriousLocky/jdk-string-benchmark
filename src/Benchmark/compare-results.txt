@@ -1,8 +1,8 @@
 CPU: AMD 4800U
-OS: Windows 11 23H2
 Unit: us/op
 Warm up run: 4
 Benchmark run: 2
+OS: Windows 11 23H2
 ===============================================================================
 OpenJDK-23+37.1 by Oracle
 
@@ -14,7 +14,7 @@ Compare.compareTo            avgt    2     85.957     126.060      412.721
 Compare.indexOf              avgt    2   1878.596   11973.483   107828.230
 
 ================================================================================
-OpenJDK-23+37.1 by Oracle
+OpenJDK-23+37.1 CE
 
 Compare Benchmark            Mode  Cnt     Time1K     Time10K     Time100K
 Compare.startsWith           avgt    2     52.299      82.560      364.158
@@ -23,6 +23,29 @@ Compare.sort                 avgt    2    133.304     182.102      723.987
 Compare.compareTo            avgt    2     65.294     106.953      424.290
 Compare.indexOf              avgt    2   1935.402   12342.623   120526.992
 
+================================================================================
+OS: Ubuntu 22.04.5 (WSL2)
+Time100K gets OOM
+
+OpenJDK-23.0.1 CE
+
+Compare Benchmark            Mode  Cnt     Time1K     Time10K
+Compare.startsWith           avgt    2     93.936     154.651
+Compare.endsWith             avgt    2    110.469     290.470
+Compare.sort                 avgt    2    113.578     196.270
+Compare.compareTo            avgt    2     62.335      94.094
+Compare.indexOf              avgt    2   3557.729   21136.976
+
+================================================================================
+OpenJDK-23.0.1 CE (built)
+
+Compare Benchmark            Mode  Cnt     Time1K     Time10K
+Compare.startsWith           avgt    2    143.118     380.485
+Compare.endsWith             avgt    2    246.099     460.824
+Compare.sort                 avgt    2    277.179     401.792
+Compare.compareTo            avgt    2     89.945     183.376
+Compare.indexOf              avgt    2   3374.130   18757.089
+
 Note:
 1. startsWith and endsWith have almost 100% speed difference
     Possibly due to cache alignment?
@@ -30,5 +53,6 @@ Note:
 3. indexOf is particularly slow, maybe something can be done about it
 4. startsWith, endsWith, compareTo runtime **grows** with string size, having similar trends
     Possibly due to cache or paging?
+5. Results from WSL are slow and do not make much sense. Bad idea measuring performance in VM?
 
 
