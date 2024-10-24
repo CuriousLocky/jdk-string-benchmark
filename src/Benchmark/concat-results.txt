@@ -68,7 +68,7 @@ Concat.stringJoiner         avgt    2      1.723      12.954        93.244
 
 Concat.formatBatch          avgt    2      3.165      24.677       267.905
 Concat.joinBatch            avgt    2      1.204      12.456        94.193
-Concat.streamAPIBatch       avgt    2     21.230      13.242       133.750
+Concat.streamAPIBatch       avgt    2      1.240      13.242       133.750
 
 Concat.formatManual         avgt    2      2.476      23.112       235.712
 Concat.stringBuilderDumb    avgt    2      8.538     894.407     78913.689
@@ -83,3 +83,36 @@ Note:
     -- Possibly due to close-source opt passes
 4. stringBuffer is consistently slower on CE than Microsoft build
 
+================================================================================
+===========================Benchmarks on Server=================================
+================================================================================
+CPU: Xeon 4210R
+OS: Ubuntu 20.04.5
+OpenJDK-23.0.1 CE
+
+Concat Benchmark            Mode  Cnt    Time100    Time1000     Time10000
+Concat.concat               avgt    2      4.858     480.907     48093.128
+Concat.format               avgt    2     23.974    1898.723    201230.870
+Concat.join                 avgt    2      5.474     421.436     43800.831
+Concat.plus                 avgt    2      4.575     439.122     45113.681
+Concat.streamAPI            avgt    2     21.675    1810.228    174431.463
+
+Concat.stringBuffer         avgt    2      2.768      29.645       294.600
+Concat.stringBuilder        avgt    2      0.603       6.039        56.369
+Concat.stringJoiner         avgt    2      0.997      10.203       125.314
+
+Concat.formatBatch          avgt    2      3.180      33.889       359.464
+Concat.joinBatch            avgt    2      1.025      11.234       115.504
+Concat.streamAPIBatch       avgt    2      1.221      13.580       132.382
+
+Concat.formatManual         avgt    2      4.348      44.151       426.279
+Concat.stringBuilderDumb    avgt    2     11.067     869.437     91633.510
+
+rawArrayCopy                avgt    2      0.588       5.702        51.495
+rawLoop                     avgt    2      0.589       7.063        50.001
+
+Note:
+1. rawLoop vs rawArrayCopy is again interesting
+2. stringBuffer vs stringBuilder difference is bigger on server
+    Possibly due to higher lock cost
+3. formatManual is slower than PC, reason unknown

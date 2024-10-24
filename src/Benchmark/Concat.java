@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class Concat {
     @State(Scope.Thread)
     public static class ConcatBenchmarkState {
-        public final int iter = 10000;
+        public final int iter = 100;
         public final String str1 = "String";
         public final String str2 = "Concat";
         public final String formatStr = "%s".repeat(iter);

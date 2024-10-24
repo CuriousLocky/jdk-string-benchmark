@@ -8,15 +8,15 @@ import java.util.concurrent.TimeUnit;
 
 @Fork(value = 1)
 @Warmup(iterations = 4)
-@Measurement(iterations = 2)
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 
 public class Compare {
+
     @State(Scope.Thread)
     public static class CompareBenchmarkState {
         public final long seed = 0;
-        public final int stringSize = 10000;
+        public final int stringSize = 1000;
         public final int suffixSize = 100;
         public final int prefixSize = 100;
         public final int subSize = 128;
@@ -44,6 +44,7 @@ public class Compare {
         }
     }
 
+    @Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MICROSECONDS)
     @Benchmark
     public void sort(CompareBenchmarkState state, Blackhole bh) {
         Arrays.sort(state.randomStrings);

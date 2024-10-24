@@ -46,6 +46,7 @@ Compare.sort                 avgt    2    277.179     401.792
 Compare.compareTo            avgt    2     89.945     183.376
 Compare.indexOf              avgt    2   3374.130   18757.089
 
+
 Note:
 1. startsWith and endsWith have almost 100% speed difference
     Possibly due to cache alignment?
@@ -54,5 +55,44 @@ Note:
 4. startsWith, endsWith, compareTo runtime **grows** with string size, having similar trends
     Possibly due to cache or paging?
 5. Results from WSL are slow and do not make much sense. Bad idea measuring performance in VM?
+    Wierd thing is the built from source version runs consistently slower than pre-built
 
+================================================================================
+===========================Benchmarks on Server=================================
+================================================================================
+CPU: Xeon 4210R
+OS: Ubuntu 20.04.5
+OpenJDK-23.0.1 CE
 
+Compare Benchmark            Mode  Cnt     Time1K     Time10K     Time100K
+Compare.startsWith           avgt    2    227.671     216.505      233.539
+Compare.endsWith             avgt    2    254.476     265.679      309.851
+Compare.sort                 avgt    2    130.490     182.039      213.510
+Compare.compareTo            avgt    2    109.187     114.466      164.074
+Compare.indexOf              avgt    2   4808.969   31215.284   298070.877
+
+================================================================================
+OpenJDK-23.0.1 by Oracle
+
+Compare Benchmark            Mode  Cnt     Time1K     Time10K     Time100K
+Compare.startsWith           avgt    2    229.766     205.602      240.320
+Compare.endsWith             avgt    2    256.133     256.751      306.053
+Compare.sort                 avgt    2    128.696     183.861      212.024
+Compare.compareTo            avgt    2    108.338     119.923      162.655
+Compare.indexOf              avgt    2   4500.632   31114.651   301117.125
+
+================================================================================
+OpenJDK-23.0.1 CE (built)
+
+Compare Benchmark            Mode  Cnt     Time1K     Time10K     Time100K
+Compare.startsWith           avgt    2    232.836     207.403      258.050
+Compare.endsWith             avgt    2    257.648     258.583      322.956
+Compare.sort                 avgt    2    127.256     190.588      220.177
+Compare.compareTo            avgt    2    106.434     113.455      164.050
+Compare.indexOf              avgt    2   4101.581   30740.434   282195.015
+
+Note:
+1. Compare to PC (Windows) results, trends are same
+2. Increment in O(1) functions are less
+    Larger cache of the server CPU?
+3. indexOf is still slow
