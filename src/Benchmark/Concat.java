@@ -1,5 +1,6 @@
 package Benchmark;
 
+import MyStrings.ArrayRope;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -217,5 +218,11 @@ public class Concat {
         String str = String.valueOf(chars);
         bh.consume(str);
         return str;
+    }
+
+    @Benchmark
+    public String arrayRope(ConcatBenchmarkState state, Blackhole bh) {
+        ArrayRope arrayRope = new ArrayRope(state.str1str2Arr);
+        return arrayRope.toString();
     }
 }
