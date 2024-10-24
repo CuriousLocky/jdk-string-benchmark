@@ -1,0 +1,15 @@
+CPU: Xeon 4210R
+OS: Ubuntu 20.04.5
+OpenJDK-23.0.1 Oracle
+
+1000 concat + 1000 substring-concat
+
+ConcatSub Benchmark             Mode  Cnt        Time
+ConcatSub.stringNaive           avgt    2   18864.223  // naive String for all operations
+ConcatSub.stringBuffer          avgt    2    1203.767  // StringBuffer for all operations
+ConcatSub.stringBufferMidMat    avgt    2    1675.278  // stringBuffer but materialize in the middle
+
+ConcatSub.arrayRopeConcat       avgt    2    3658.893  // use ArrayRope in immutable way (mimic String) for all op
+ConcatSub.arrayRope             avgt    2     264.811  // use ArrayRope for all operations
+ConcatSub.arrayRopeNoMat        avgt    2     136.096  // use ArrayRope without materialization
+

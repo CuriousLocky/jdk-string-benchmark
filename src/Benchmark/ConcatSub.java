@@ -31,8 +31,8 @@ public class ConcatSub {
             for (int i = 0; i < concatIter; i++) {
                 subStringsIndices[i] = i;
             }
-            str1 = makeRandomAsciiString(stringSize);
-            str2 = makeRandomAsciiString(stringSize);
+            str1 = makeRandomAsciiString();
+            str2 = makeRandomAsciiString();
             StringBuilder sb = new StringBuilder(str1);
             for (int i = 0; i < concatIter; i++) {
                 sb.append(str2);
@@ -43,7 +43,7 @@ public class ConcatSub {
             }
             result = resultBuilder.toString();
         }
-        private String makeRandomAsciiString(int stringSize) {
+        private String makeRandomAsciiString() {
             char[] chars = new char[stringSize];
             for (int i = 0; i < stringSize; i++) {
                 chars[i] = (char) ((32 + rand.nextInt()) % 127);
@@ -65,6 +65,30 @@ public class ConcatSub {
     }
 
     @Benchmark
+    public void stringNaive(ConcatSubState state, Blackhole bh) {
+        String src = state.str1;
+        src += state.str2.repeat(state.concatIter);
+        String tgt = "";
+        for (int i : state.subStringsIndices) {
+            tgt += src.substring(i, i + state.subStringSize);
+        }
+        bh.consume(tgt);
+    }
+
+    @Benchmark
+    public void stringBufferMidMat(ConcatSubState state, Blackhole bh) {
+        StringBuilder srcBuilder = new StringBuilder(state.str1);
+        srcBuilder.append(String.valueOf(state.str2).repeat(state.concatIter));
+        StringBuilder tgtBuilder = new StringBuilder();
+        String srcStr = srcBuilder.toString();
+        for (int i : state.subStringsIndices) {
+            tgtBuilder.append(srcStr, i, i + state.subStringSize);
+        }
+        String result = tgtBuilder.toString();
+        bh.consume(result);
+    }
+
+    @Benchmark
     public void arrayRope(ConcatSubState state, Blackhole bh) {
         ArrayRope rope = new ArrayRope(state.str1);
         for (int i = 0; i < state.concatIter; i++) {
@@ -77,14 +101,14 @@ public class ConcatSub {
         String result = rope2.toString();
         bh.consume(result);
 //        assert !state.checkResult || result.equals(state.result);
-//        194us
+//        assert not working with JMH for some reason
     }
 
     @Benchmark
-    public void arrayRopeConcat(ConcatSubState state, Blackhole bh) {
+    public void arrayRopeImmutable(ConcatSubState state, Blackhole bh) {
         ArrayRope rope = new ArrayRope(state.str1);
         for (int i = 0; i < state.concatIter; i++) {
-            rope.append(state.str2);
+            rope = rope.concat(state.str2);
         }
         ArrayRope rope2 = new ArrayRope();
         for (int i : state.subStringsIndices) {
@@ -92,7 +116,6 @@ public class ConcatSub {
         }
         String result = rope2.toString();
         bh.consume(result);
-//        assert !state.checkResult || result.equals(state.result);
     }
 
     @Benchmark
@@ -106,6 +129,5 @@ public class ConcatSub {
             rope2.append(rope.subSequence(i, i + state.subStringSize));
         }
         bh.consume(rope2);
-//        assert !state.checkResult || result.equals(state.result);
     }
 }
