@@ -46,18 +46,6 @@ public class ArrayRope implements CharSequence {
         public ArrayRopePiece subSequence(int start, int end) {
             return new ArrayRopePiece(this.start + start, this.start + end, content);
         }
-
-        @Override
-        public IntStream chars() {
-            // TODO: support chars() properly
-            return this.content.subSequence(this.start, this.end).chars();
-        }
-
-        @Override
-        public IntStream codePoints() {
-            // TODO: support codePoints() properly
-            return this.content.subSequence(this.start, this.end).codePoints();
-        }
     }
 
     private final ArrayList<ArrayRopePiece> pieces;
@@ -160,12 +148,15 @@ public class ArrayRope implements CharSequence {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        char[] charBuffer = new char[this.length()];
+        int pos = 0;
         for (ArrayRopePiece piece : this.pieces) {
-//            sb.append(piece);
-            sb.append(piece.content, piece.start, piece.end);
+            for (int i = 0; i < piece.length(); i++) {
+                charBuffer[pos + i] = piece.content.charAt(i + piece.start);
+            }
+            pos += piece.length();
         }
-        return sb.toString();
+        return new String(charBuffer);
     }
 
     @Override
