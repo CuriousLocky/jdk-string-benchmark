@@ -26,6 +26,7 @@ public class ConcatSub {
         public String str2;
         public String result;
         public final int[] subStringsIndices = new int[subIter];
+
         @Setup
         public void setup() {
             for (int i = 0; i < concatIter; i++) {
@@ -43,6 +44,7 @@ public class ConcatSub {
             }
             result = resultBuilder.toString();
         }
+
         private String makeRandomAsciiString() {
             char[] chars = new char[stringSize];
             for (int i = 0; i < stringSize; i++) {
@@ -53,7 +55,7 @@ public class ConcatSub {
     }
 
     @Benchmark
-    public void stringBuffer(ConcatSubState state, Blackhole bh) {
+    public void stringBuilder(ConcatSubState state, Blackhole bh) {
         StringBuilder srcBuilder = new StringBuilder(state.str1);
         srcBuilder.append(String.valueOf(state.str2).repeat(state.concatIter));
         StringBuilder tgtBuilder = new StringBuilder();
@@ -100,8 +102,6 @@ public class ConcatSub {
         }
         String result = rope2.toString();
         bh.consume(result);
-//        assert !state.checkResult || result.equals(state.result);
-//        assert not working with JMH for some reason
     }
 
     @Benchmark
